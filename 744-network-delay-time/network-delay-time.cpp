@@ -1,34 +1,43 @@
 class Solution {
 public:
     int networkDelayTime(vector<vector<int>>& times, int n, int k) {
-        int m = times.size();
-        vector<vector<pair<int, int>>> adj(105);
-        for (int i = 0; i < m; i++) {
-            adj[times[i][0]].push_back({ times[i][1], times[i][2] });
+        
+        vector<pair<int,int>> graph[n+1];
+        int td = times.size();
+        for(int i=0; i <td; i++){
+          // we are taking time in first part of pair because this will help us in Priority queue for arrangement according to least time 
+            graph[times[i][0]].push_back({times[i][2],times[i][1]});
         }
-        priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> pq;
-        vector<int> dist(105, 1e5);
+        int dist[n+1];
+        // memset(dist,INT_MAX,sizeof(dist));
+         for(int i=1;i<=n;i++)
+            dist[i] = INT_MAX;
+        dist[0] = -1;
         dist[k] = 0;
-        pq.push({ dist[k], k });
-        while (!pq.empty()) {
-            auto it = pq.top();
-            pq.pop();
-            int prev_dist = it.first;
-            int prev_pos = it.second;
-            for (auto x : adj[prev_pos]) {
-                int next_pos = x.first;
-                int next_dist = x.second;
-                if (dist[next_pos] > dist[prev_pos] + next_dist) {
-                    dist[next_pos] = dist[prev_pos] + next_dist;
-                    pq.push({ dist[next_pos], next_pos });
+       
+        
+        priority_queue<pair<int,int>,vector<pair<int,int>>,greater<pair<int,int>>> pq;
+        pq.push({0,k});
+        while(pq.size()){
+            pair<int,int> x = pq.top();pq.pop();
+            
+            for( pair<int,int> itr : graph[x.second]){
+                
+                if(x.first + itr.first < dist[itr.second]){
+                    dist[itr.second] = x.first + itr.first;
+                    pq.push({x.first + itr.first, itr.second});
                 }
+                
             }
         }
-        int mini = INT_MIN; // Change from INT_MAX to INT_MIN to find the maximum delay
-        for (int i = 1; i <= n; i++) { // Change the loop condition
-            if (i != k && dist[i] == 1e5)  return -1;
-            mini = max(mini, dist[i]);
+        int ans = 0;
+        for(int i=1;i<=n;i++){
+               // cout <<dist[i]; 
+            if(dist[i] == INT_MAX)
+                return -1;
+            else if(ans < dist[i])
+                ans = dist[i];
         }
-        return mini;
+        return ans;
     }
 };
