@@ -1,7 +1,6 @@
 class Solution {
 public:
     int networkDelayTime(vector<vector<int>>& times, int n, int k) {
-        
         vector<pair<int,int>> graph[n+1];
         int td = times.size();
         for(int i=0; i <td; i++){
@@ -10,12 +9,10 @@ public:
         }
         int dist[n+1];
         // memset(dist,INT_MAX,sizeof(dist));
-         for(int i=1;i<=n;i++)
+         for(int i=1;i<=n;i++){
             dist[i] = INT_MAX;
-        dist[0] = -1;
+         }
         dist[k] = 0;
-       
-        
         priority_queue<pair<int,int>,vector<pair<int,int>>,greater<pair<int,int>>> pq;
         pq.push({0,k});
         while(pq.size()){
