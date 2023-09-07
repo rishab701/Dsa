@@ -10,26 +10,52 @@
  */
 class Solution {
 public:
+ListNode* reverse(ListNode* head){
+        
+        ListNode* prev = NULL, *next = NULL, *current = head;
+        while(current != NULL){
+            next = current->next;
+            current->next = prev;
+            prev = current;
+            current = next;
+            
+        }
+        
+        return prev;
+    }
     ListNode* reverseBetween(ListNode* head, int left, int right) {
-        if(head==NULL){
-            return NULL;
+        ListNode* current = head, *prev = NULL;
+        int count = 1;
+        while(count != left){
+            prev = current;
+            current = current->next;
+            count++;
         }
-        vector<int>ans;
-        ListNode*temp=head;
-        int cnt=0;
-        while(temp!=NULL){
-            ans.push_back(temp->val);
-            temp=temp->next;
-            cnt++;
+        
+        ListNode* start = current;
+        while(count != right){
+            current = current->next;
+            count++;
         }
-        left--;
-        reverse(ans.begin()+left,ans.begin()+right);
-        ListNode*dummy=new ListNode(0);
-        ListNode*curr=dummy;
-        for(int i=0;i<ans.size();i++){
-            curr->next=new ListNode(ans[i]);
-            curr=curr->next;
+        
+        ListNode* rest = current->next;
+        current->next = NULL;
+        
+        ListNode* newHead = reverse(start);
+        if (prev!=NULL){
+            prev->next = newHead;
+
         }
-        return dummy->next;
+        current = newHead;
+        while(current->next!=NULL){
+            current= current->next;
+        }
+        current->next = rest;
+        if(left == 1){
+            return newHead;
+        }
+        else{
+            return head;
+        }
     }
 };
