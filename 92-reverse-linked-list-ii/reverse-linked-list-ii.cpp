@@ -11,6 +11,9 @@
 class Solution {
 public:
     ListNode* reverseBetween(ListNode* head, int left, int right) {
+        if(head==NULL){
+            return NULL;
+        }
         vector<int>ans;
         ListNode*temp=head;
         int cnt=0;
