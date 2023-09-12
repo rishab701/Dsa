@@ -1,36 +1,25 @@
 class Solution {
 public:
 int minDeletions(string s) {
-    // Count the frequency of each character in the string
-    unordered_map<char, int> freq;
+    unordered_map<char, int> f;
     for (char c : s) {
-        freq[c]++;
+        f[c]++;
     }
-
-    // Create a vector to store the frequencies of characters
-    vector<int> frequencies;
-    for (auto it = freq.begin(); it != freq.end(); ++it) {
-        frequencies.push_back(it->second);
+    vector<int> freq;
+    for (auto it = f.begin(); it != f.end(); ++it) {
+        freq.push_back(it->second);
     }
-
-    // Sort the frequencies in non-increasing order
-    sort(frequencies.rbegin(), frequencies.rend());
-    int deletions = 0;
-    unordered_set<int> uniqueFrequencies;
-    // Iterate over the sorted frequencies
-    for (int i = 0; i < frequencies.size(); ++i) {
-        int currentFreq = frequencies[i];
-
-        // Keep decreasing the frequency until it reaches a value that has not appeared before
-        while (uniqueFrequencies.count(currentFreq) > 0 && currentFreq > 0) {
-            currentFreq--;
-            deletions++;
+    sort(freq.rbegin(), freq.rend());
+    int cnt=0;
+    set<int>st;
+    for(int i=0;i<freq.size();i++){
+        int currfreq=freq[i];
+        while(st.count(currfreq)>0 && currfreq>0){
+            currfreq--;
+            cnt++;
         }
-
-        // Add the current frequency to the set of unique frequencies
-        uniqueFrequencies.insert(currentFreq);
+        st.insert(currfreq);
     }
-
-    return deletions;
+    return cnt;
   }
 };
